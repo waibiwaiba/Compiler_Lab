@@ -18,16 +18,16 @@
 
 // typedef uint_32 bool;
 
-// node type declared
-typedef struct node {
-    int lineNo;  //  node in which line
-    //   int depth;   //  node depth, for count white space for print
-    NodeType type;  // node type
-    char* name;     //  node name
-    char* val;      //  node value
+// 声明节点类型 
+typedef struct node { 
+    int lineNo; // 节点所在行号  
+    // int depth; // 节点深度，用于计算打印时的空格 
+    NodeType type; // 节点类型 
+    char* name; // 节点名称 
+    char* val; // 节点值
 
-    struct node* child;  //  non-terminals node first child node
-    struct node* next;   //  non-terminals node next brother node
+    struct node* child;  // 非终结符节点的第一个子节点
+    struct node* next;   // 非终结符节点的下一个兄弟节点
 
 } Node;
 
