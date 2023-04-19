@@ -1,0 +1,195 @@
+[../Test/s1.cmm]
+int main()
+{
+	int i = 0;
+	j = i + 1;
+}
+
+[s1_output.txt]
+Error type 1 at Line 4: Undefined variable "j".
+------------------------------------
+[../Test/s2.cmm]
+int main()
+{
+	int i = 0;
+	inc(i);
+}
+
+[s2_output.txt]
+Error type 2 at Line 4: Undefined function "inc".
+------------------------------------
+[../Test/s3.cmm]
+int main()
+{
+	int i, j;
+	int i;
+}
+[s3_output.txt]
+Error type 3 at Line 4: Redefined variable "i".
+------------------------------------
+[../Test/s4.cmm]
+int func(int i) 
+{
+	return i;
+}
+
+int func() 
+{
+	return 0;
+}
+
+int main()
+{
+}
+[s4_output.txt]
+Error type 4 at Line 6: Redefined function "func".
+------------------------------------
+[../Test/s5.cmm]
+int main()
+{
+	int i;
+	i = 3.7;
+}
+[s5_output.txt]
+Error type 5 at Line 4: Type mismatched for assignment.
+------------------------------------
+[../Test/s6.cmm]
+int main()
+{
+	int i;
+	10 = i;
+}
+[s6_output.txt]
+Error type 6 at Line 4: The left-hand side of an assignment must be avariable.
+------------------------------------
+[../Test/s7.cmm]
+int main()
+{
+	float j;
+	10 + j;
+}
+[s7_output.txt]
+Error type 7 at Line 4: Type mismatched for operands.
+------------------------------------
+[../Test/s8.cmm]
+int main()
+{
+	float j = 1.7;
+	return j;
+}
+[s8_output.txt]
+Error type 8 at Line 4: Type mismatched for return.
+------------------------------------
+[../Test/s9.cmm]
+int func(int i)
+{
+	return i;
+}
+
+int main()
+{
+	func(1, 2);
+}
+[s9_output.txt]
+Error type 9 at Line 8: too many arguments to function "func", except 1 args.
+------------------------------------
+[../Test/s10.cmm]
+int main()
+{
+	int i; 
+	i[0];
+}
+[s10_output.txt]
+Error type 10 at Line 4: "i" is not an array.
+------------------------------------
+[../Test/s11.cmm]
+int main()
+{
+	int i; 
+	i(10);
+}
+
+[s11_output.txt]
+Error type 11 at Line 4: "i" is not a function.
+------------------------------------
+[../Test/s12.cmm]
+int main()
+{
+	int i[10]; 
+	i[1.5] = 10;
+}
+
+[s12_output.txt]
+Error type 12 at Line 4: "1.5" is not an integer.
+------------------------------------
+[../Test/s13.cmm]
+struct Position
+{
+	float x, y;
+};
+
+int main()
+{
+	int i; 
+	i.x;
+}
+
+[s13_output.txt]
+Error type 13 at Line 9: Illegal use of ".".
+------------------------------------
+[../Test/s14.cmm]
+struct Position
+{
+	float x, y;
+};
+
+int main()
+{
+	struct Position p;
+	if (p.n == 3.7)
+		return 0; 
+}
+
+[s14_output.txt]
+Error type 14 at Line 9: NONEXISTFIELD.
+------------------------------------
+[../Test/s15.cmm]
+struct Position
+{
+	float x, y;
+	int x;
+};
+
+int main()
+{
+}
+
+[s15_output.txt]
+Error type 15 at Line 4: Redefined field "x".
+------------------------------------
+[../Test/s16.cmm]
+struct Position
+{
+	float x;
+};
+
+struct Position
+{
+	int y;
+};
+
+int main()
+{
+}
+[s16_output.txt]
+Error type 16 at Line 6: Duplicated name "Position".
+------------------------------------
+[../Test/s17.cmm]
+int main()
+{
+	struct Position pos;
+}
+
+[s17_output.txt]
+Error type 17 at Line 3: Undefined structure "Position".
+------------------------------------
