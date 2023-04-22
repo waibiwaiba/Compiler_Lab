@@ -3,14 +3,14 @@
 pTable table;
 
 // Type functions
-pType newType(Kind kind, ...) {
+pType newType(Kind kind, ...) {// 创建类型
     pType p = (pType)malloc(sizeof(Type));
     assert(p != NULL);
     p->kind = kind;
     va_list vaList;
     assert(kind == BASIC || kind == ARRAY || kind == STRUCTURE ||
            kind == FUNCTION);
-    switch (kind) {
+    switch (kind) {// union
         case BASIC:
             va_start(vaList, kind);
             p->u.basic = va_arg(vaList, BasicType);
@@ -36,14 +36,14 @@ pType newType(Kind kind, ...) {
     return p;
 }
 
-pType copyType(pType src) {
+pType copyType(pType src) {// 复制src的类型
     if (src == NULL) return NULL;
     pType p = (pType)malloc(sizeof(Type));
     assert(p != NULL);
     p->kind = src->kind;
     assert(p->kind == BASIC || p->kind == ARRAY || p->kind == STRUCTURE ||
            p->kind == FUNCTION);
-    switch (p->kind) {
+    switch (p->kind) {// union
         case BASIC:
             p->u.basic = src->u.basic;
             break;
@@ -65,13 +65,13 @@ pType copyType(pType src) {
     return p;
 }
 
-void deleteType(pType type) {
+void deleteType(pType type) {// 删除类型
     assert(type != NULL);
     assert(type->kind == BASIC || type->kind == ARRAY ||
            type->kind == STRUCTURE || type->kind == FUNCTION);
     pFieldList temp = NULL;
     // pFieldList tDelete = NULL;
-    switch (type->kind) {
+    switch (type->kind) {// union
         case BASIC:
             break;
         case ARRAY:
@@ -106,7 +106,7 @@ void deleteType(pType type) {
     free(type);
 }
 
-boolean checkType(pType type1, pType type2) {
+boolean checkType(pType type1, pType type2) {   // 判断两个类型是否相等
     if (type1 == NULL || type2 == NULL) return TRUE;
     if (type1->kind == FUNCTION || type2->kind == FUNCTION) return FALSE;
     if (type1->kind != type2->kind)
@@ -126,7 +126,7 @@ boolean checkType(pType type1, pType type2) {
     }
 }
 
-void printType(pType type) {
+void printType(pType type) {// 打印类型信息
     if (type == NULL) {
         printf("type is NULL.\n");
     } else {
@@ -159,7 +159,7 @@ void printType(pType type) {
 }
 
 // FieldList functions
-pFieldList newFieldList(char* newName, pType newType) {
+pFieldList newFieldList(char* newName, pType newType) { // 新建FieldList，并初始化
     pFieldList p = (pFieldList)malloc(sizeof(FieldList));
     assert(p != NULL);
     p->name = newString(newName);
@@ -168,7 +168,7 @@ pFieldList newFieldList(char* newName, pType newType) {
     return p;
 }
 
-pFieldList copyFieldList(pFieldList src) {
+pFieldList copyFieldList(pFieldList src) {  // 复制FieldList
     assert(src != NULL);
     pFieldList head = NULL, cur = NULL;
     pFieldList temp = src;
@@ -187,7 +187,7 @@ pFieldList copyFieldList(pFieldList src) {
     return head;
 }
 
-void deleteFieldList(pFieldList fieldList) {
+void deleteFieldList(pFieldList fieldList) {    // 删除FieldList
     assert(fieldList != NULL);
     if (fieldList->name) {
         free(fieldList->name);
@@ -198,7 +198,7 @@ void deleteFieldList(pFieldList fieldList) {
     free(fieldList);
 }
 
-void setFieldListName(pFieldList p, char* newName) {
+void setFieldListName(pFieldList p, char* newName) {    // 设置FieldList的名字
     assert(p != NULL && newName != NULL);
     if (p->name != NULL) {
         free(p->name);
@@ -209,7 +209,7 @@ void setFieldListName(pFieldList p, char* newName) {
     p->name = newString(newName);
 }
 
-void printFieldList(pFieldList fieldList) {
+void printFieldList(pFieldList fieldList) { // 打印FieldList
     if (fieldList == NULL)
         printf("fieldList is NULL\n");
     else {
@@ -221,7 +221,7 @@ void printFieldList(pFieldList fieldList) {
 }
 
 // tableItem functions
-pItem newItem(int symbolDepth, pFieldList pfield) {
+pItem newItem(int symbolDepth, pFieldList pfield) { // 新建符号表的一个元素
     pItem p = (pItem)malloc(sizeof(TableItem));
     assert(p != NULL);
     p->symbolDepth = symbolDepth;
@@ -231,14 +231,14 @@ pItem newItem(int symbolDepth, pFieldList pfield) {
     return p;
 }
 
-void deleteItem(pItem item) {
+void deleteItem(pItem item) {   // 删除符号表的某个元素
     assert(item != NULL);
     if (item->field != NULL) deleteFieldList(item->field);
     free(item);
 }
 
 // Hash functions
-pHash newHash() {
+pHash newHash() {   // 新建哈希表
     pHash p = (pHash)malloc(sizeof(HashTable));
     assert(p != NULL);
     p->hashArray = (pItem*)malloc(sizeof(pItem) * HASH_TABLE_SIZE);
@@ -249,7 +249,7 @@ pHash newHash() {
     return p;
 }
 
-void deleteHash(pHash hash) {
+void deleteHash(pHash hash) {   // 删除哈希表
     assert(hash != NULL);
     for (int i = 0; i < HASH_TABLE_SIZE; i++) {
         pItem temp = hash->hashArray[i];
@@ -265,18 +265,18 @@ void deleteHash(pHash hash) {
     free(hash);
 }
 
-pItem getHashHead(pHash hash, int index) {
+pItem getHashHead(pHash hash, int index) {  // 返回哈希表中指定索引位置的头节点指针
     assert(hash != NULL);
     return hash->hashArray[index];
 }
 
-void setHashHead(pHash hash, int index, pItem newVal) {
+void setHashHead(pHash hash, int index, pItem newVal) { // 设置哈希表中指定索引位置的头节点指针
     assert(hash != NULL);
     hash->hashArray[index] = newVal;
 }
 // Table functions
 
-pTable initTable() {
+pTable initTable() {    // 初始化符号表
     pTable table = (pTable)malloc(sizeof(Table));
     assert(table != NULL);
     table->hash = newHash();
@@ -285,7 +285,7 @@ pTable initTable() {
     return table;
 };
 
-void deleteTable(pTable table) {
+void deleteTable(pTable table) {    //  删除符号表
     deleteHash(table->hash);
     table->hash = NULL;
     deleteStack(table->stack);
@@ -293,7 +293,7 @@ void deleteTable(pTable table) {
     free(table);
 };
 
-pItem searchTableItem(pTable table, char* name) {
+pItem searchTableItem(pTable table, char* name) {   // 符号表中查找指定名称的符号，返回对应的符号项指针
     unsigned hashCode = getHashCode(name);
     pItem temp = getHashHead(table->hash, hashCode);
     if (temp == NULL) return NULL;
@@ -355,7 +355,7 @@ void deleteTableItem(pTable table, pItem item) {
     deleteItem(item);
 }
 
-boolean isStructDef(pItem src) {
+boolean isStructDef(pItem src) {// 判断是否为结构体类型
     if (src == NULL) return FALSE;
     if (src->field->type->kind != STRUCTURE) return FALSE;
     if (src->field->type->u.structure.structName) return FALSE;
@@ -445,7 +445,7 @@ void setCurDepthStackHead(pStack stack, pItem newVal) {
 }
 
 // Global function
-void traverseTree(pNode node) {
+void traverseTree(pNode node) {// 先序遍历构建符号表
     if (node == NULL) return;
 
     if (!strcmp(node->name, "ExtDef")) ExtDef(node);
@@ -455,39 +455,41 @@ void traverseTree(pNode node) {
 }
 
 // Generate symbol table functions
-void ExtDef(pNode node) {
+void ExtDef(pNode node) {// 解析外部定义
     assert(node != NULL);
     // ExtDef -> Specifier ExtDecList SEMI
     //         | Specifier SEMI
     //         | Specifier FunDec CompSt
-    pType specifierType = Specifier(node->child);
+    pType specifierType = Specifier(node->child);// 获取该定义的类型信息
     char* secondName = node->child->next->name;
 
     // printType(specifierType);
     // ExtDef -> Specifier ExtDecList SEMI
-    if (!strcmp(secondName, "ExtDecList")) {
+    if (!strcmp(secondName, "ExtDecList")) {// 该定义是一个变量声明
         // TODO: process first situation
         ExtDecList(node->child->next, specifierType);
     }
     // ExtDef -> Specifier FunDec CompSt
-    else if (!strcmp(secondName, "FunDec")) {
+    else if (!strcmp(secondName, "FunDec")) {// 该定义是一个函数定义
         // TODO: process third situation
         FunDec(node->child->next, specifierType);
         CompSt(node->child->next->next, specifierType);
     }
     if (specifierType) deleteType(specifierType);
+    // 该定义是一个结构体定义
     // printTable(table);
     // Specifier SEMI
     // this situation has no meaning
-    // or is struct define(have been processe inSpecifier())
+    // or is struct define(have been processe in Specifier())
 }
 
-void ExtDecList(pNode node, pType specifier) {
+void ExtDecList(pNode node, pType specifier) {// 解析外部声明列表
     assert(node != NULL);
     // ExtDecList -> VarDec
     //             | VarDec COMMA ExtDecList
     pNode temp = node;
     while (temp) {
+        // 处理变量声明
         pItem item = VarDec(temp->child, specifier);
         if (checkTableItemConflict(table, item)) {
             char msg[100] = {0};
@@ -497,6 +499,7 @@ void ExtDecList(pNode node, pType specifier) {
         } else {
             addTableItem(table, item);
         }
+        // 如果还有其他的变量声明
         if (temp->child->next) {
             temp = temp->next->next->child;
         } else {
@@ -505,7 +508,7 @@ void ExtDecList(pNode node, pType specifier) {
     }
 }
 
-pType Specifier(pNode node) {
+pType Specifier(pNode node) {// 返回节点的标识符
     assert(node != NULL);
     // Specifier -> TYPE
     //            | StructSpecifier
@@ -536,8 +539,9 @@ pType StructSpecifier(pNode node) {
     pNode t = node->child->next;
     // StructSpecifier->STRUCT OptTag LC DefList RC
     // printTreeInfo(t, 0);
-    if (strcmp(t->name, "Tag")) {
+    if (strcmp(t->name, "Tag")) {// 如果该节点是表示结构体定义
         // addStructLayer(table);
+        // 在符号表中添加一个新的符号表项，并设置其类型为结构体类型
         pItem structItem =
             newItem(table->stack->curStackDepth,
                     newFieldList("", newType(STRUCTURE, NULL, NULL)));
@@ -547,6 +551,7 @@ pType StructSpecifier(pNode node) {
         }
         // unnamed struct
         else {
+            // 创建一个匿名结构体，并在符号表中添加一个新的符号表项
             table->unNamedStructNum++;
             char structName[20] = {0};
             sprintf(structName, "%d", table->unNamedStructNum);
@@ -560,6 +565,7 @@ pType StructSpecifier(pNode node) {
         }
 
         if (checkTableItemConflict(table, structItem)) {
+            // 如果结构体定义和符号表中已有的定义冲突
             char msg[100] = {0};
             sprintf(msg, "Duplicated name \"%s\".", structItem->field->name);
             pError(DUPLICATED_NAME, node->lineNo, msg);
@@ -588,7 +594,9 @@ pType StructSpecifier(pNode node) {
     }
 
     // StructSpecifier->STRUCT Tag
+    // 如果是结构体引用
     else {
+        // 在符号表中查找该结构体定义并返回其类型信息
         pItem structItem = searchTableItem(table, t->child->val);
         if (structItem == NULL || !isStructDef(structItem)) {
             char msg[100] = {0};
@@ -603,7 +611,7 @@ pType StructSpecifier(pNode node) {
     return returnType;
 }
 
-pItem VarDec(pNode node, pType specifier) {
+pItem VarDec(pNode node, pType specifier) {// 变量声明
     assert(node != NULL);
     // VarDec -> ID
     //         | VarDec LB INT RB
@@ -622,6 +630,7 @@ pItem VarDec(pNode node, pType specifier) {
         p->field->type = copyType(specifier);
     }
     // VarDec -> VarDec LB INT RB
+    // 数组的声明
     else {
         pNode varDec = node->child;
         pType temp = specifier;
@@ -655,7 +664,7 @@ pItem VarDec(pNode node, pType specifier) {
 //                        generateVarDecType(node, type));
 // }
 
-void FunDec(pNode node, pType returnType) {
+void FunDec(pNode node, pType returnType) {// 处理函数声明
     assert(node != NULL);
     // FunDec -> ID LP VarList RP
     //         | ID LP RP
@@ -683,7 +692,7 @@ void FunDec(pNode node, pType returnType) {
     }
 }
 
-void VarList(pNode node, pItem func) {
+void VarList(pNode node, pItem func) {// 处理函数参数列表
     assert(node != NULL);
     // VarList -> ParamDec COMMA VarList
     //          | ParamDec
@@ -708,13 +717,13 @@ void VarList(pNode node, pItem func) {
             argc++;
         }
     }
-
+    // 添加到函数符号表项的参数列表中
     func->field->type->u.function.argc = argc;
 
     minusStackDepth(table->stack);
 }
 
-pFieldList ParamDec(pNode node) {
+pFieldList ParamDec(pNode node) {// 处理函数参数声明
     assert(node != NULL);
     // ParamDec -> Specifier VarDec
     pType specifierType = Specifier(node->child);
@@ -726,13 +735,13 @@ pFieldList ParamDec(pNode node) {
         pError(REDEF_VAR, node->lineNo, msg);
         deleteItem(p);
         return NULL;
-    } else {
+    } else {// 返回字段列表
         addTableItem(table, p);
         return p->field;
     }
 }
 
-void CompSt(pNode node, pType returnType) {
+void CompSt(pNode node, pType returnType) {// 处理复合语句
     assert(node != NULL);
     // CompSt -> LC DefList StmtList RC
     // printTreeInfo(node, 0);
@@ -749,7 +758,7 @@ void CompSt(pNode node, pType returnType) {
     clearCurDepthStackList(table);
 }
 
-void StmtList(pNode node, pType returnType) {
+void StmtList(pNode node, pType returnType) {// 处理语句列表
     // assert(node != NULL);
     // StmtList -> Stmt StmtList
     //           | e
@@ -760,7 +769,7 @@ void StmtList(pNode node, pType returnType) {
     }
 }
 
-void Stmt(pNode node, pType returnType) {
+void Stmt(pNode node, pType returnType) {// 处理语句
     assert(node != NULL);
     // Stmt -> Exp SEMI
     //       | CompSt
@@ -1159,7 +1168,7 @@ pType Exp(pNode node) {
     }
 }
 
-void Args(pNode node, pItem funcInfo) {
+void Args(pNode node, pItem funcInfo) {// 处理函数参数
     assert(node != NULL);
     // Args -> Exp COMMA Args
     //       | Exp

@@ -25,9 +25,13 @@ int main(int argc, char** argv) {
     yyrestart(f);
     yyparse();
     if (!lexError && !synError) {
+        // 创建符号表
         table = initTable();
         // printTreeInfo(root, 0);
+        
+        // 对语法树进行遍历，进行语义分析
         traverseTree(root);
+        // 删除符号表，并释放语法树的内存
         deleteTable(table);
     }
     delNode(&root);

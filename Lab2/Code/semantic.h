@@ -62,7 +62,7 @@ typedef struct stack {
 typedef struct table {
     pHash hash;
     pStack stack;
-    int unNamedStructNum;
+    int unNamedStructNum;   // 用数字编号作为匿名结构体的名字
     // int enterStructLayer;
 } Table;
 
